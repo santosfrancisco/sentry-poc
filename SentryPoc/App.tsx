@@ -9,117 +9,50 @@
  */
 
 import React from 'react';
-import {
-  Button,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
 
-import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import * as Sentry from '@sentry/react-native';
 
 import {initSentry} from './config/sentry';
-import ModuloA from 'react-native-modulo-a';
-import ModuloB from 'react-native-modulo-b';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import Home from './src/screens/Home';
+import ModA from './src/screens/ModA';
+import ModB from './src/screens/ModB';
+const routingInstrumentation = new Sentry.ReactNavigationV5Instrumentation();
 
-initSentry();
+const Stack = createStackNavigator();
+
+initSentry(routingInstrumentation);
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+  // Create a ref for the navigation container
+  const navigation = React.useRef();
   React.useEffect(() => {
     Sentry.configureScope((scope) => {
       // enriquece o log com dados do user
       scope.setUser({
-        id: 'id_user2',
-        email: 'user2@email.com',
-        username: 'username_do_user2',
-        ip_address: 'localhost',
+        id: 'id_user1',
+        email: 'user1@email.com',
+        username: 'username_do_user1',
       });
     });
   }, []);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <View style={styles.sectionContainer}>
-            <Text
-              style={[
-                styles.sectionTitle,
-                {
-                  color: isDarkMode ? Colors.white : Colors.black,
-                },
-              ]}>
-              POC <Text style={styles.highlight}>Sentry</Text>
-            </Text>
-            <Button
-              title="Lançar erro"
-              onPress={() => {
-                Sentry.addBreadcrumb({
-                  message: 'Esse erro aconteceu ao clicar no botao Lancar erro',
-                  category: 'Buttons',
-                  type: 'tipo aviso',
-                });
-
-                throw new Error('First error!');
-              }}
-            />
-            <Button
-              color="green"
-              title="Lançar erro com tag"
-              onPress={() => {
-                Sentry.setTag('tag', 'valor_da_tag');
-                Sentry.setExtra(
-                  'extra-info',
-                  'aqui o valor da informaçào extra',
-                );
-
-                throw new Error('Second error!');
-              }}
-            />
-            <ModuloA />
-            <ModuloB />
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer
+      //@ts-ignore
+      ref={navigation}
+      onReady={() => {
+        // Register the navigation container with the instrumentation
+        routingInstrumentation.registerNavigationContainer(navigation);
+      }}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="ModA" component={ModA} />
+        <Stack.Screen name="ModB" component={ModB} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default Sentry.wrap(App);
