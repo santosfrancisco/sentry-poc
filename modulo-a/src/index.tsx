@@ -1,45 +1,24 @@
+import 'react-native-gesture-handler';
+
 import React from 'react';
 import * as Sentry from '@sentry/react-native';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { useSentryHub } from './hooks/useSentryHub';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from '../src/screens/Home';
+import ModuleAScreen from '../src/screens/ModuleA';
+
+const Stack = createStackNavigator();
 
 const ModuloA = () => {
-  const sentryHub = useSentryHub();
-
   return (
-    <View style={styles.container}>
-      <Text>Módulo A</Text>
-      <View style={styles.box}>
-        <Button
-          title="Throw new Error no Mod-A"
-          onPress={() => {
-            throw new Error('Erro lançado do módulo A.');
-          }}
-        />
-      </View>
-      <View style={styles.box}>
-        <Button
-          title="Sentry.captureException no Mod-A"
-          onPress={() => {
-            sentryHub.captureException(
-              'Erro lançado manualmente do hub no módulo A'
-            );
-          }}
-        />
-      </View>
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="HomeModA"
+        component={HomeScreen}
+        options={{ title: 'Home do módulo A' }}
+      />
+      <Stack.Screen name="ModuleA" component={ModuleAScreen} />
+    </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    width: '100%',
-    padding: 8,
-  },
-  box: {
-    marginVertical: 10,
-  },
-});
 
 export default Sentry.wrap(ModuloA);

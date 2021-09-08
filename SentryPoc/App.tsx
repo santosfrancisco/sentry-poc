@@ -48,7 +48,13 @@ const App = () => {
       }}>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="ModA" component={ModA} />
+        <Stack.Screen
+          name="ModA"
+          component={ModA}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen name="ModB" component={ModB} />
       </Stack.Navigator>
     </NavigationContainer>

@@ -42,7 +42,16 @@ const Home = () => {
         <Button
           color="orange"
           title="Ir para módulo B"
-          onPress={() => navigation.navigate('ModB')}
+          onPress={() =>
+            navigation.navigate({
+              name: 'ModB',
+              params: {
+                cpf: '53945299063',
+                nome: 'Fulano',
+                ip: '123.123.123.12',
+              },
+            })
+          }
         />
       </View>
     </>

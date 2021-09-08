@@ -1,4 +1,5 @@
 import pkg from '../package.json';
+import * as util from '../config/util';
 
 import * as Sentry from '@sentry/react-native';
 
@@ -14,7 +15,7 @@ export const initSentry = (
         beforeNavigate: (context) => {
           // Aqui pode tratar as informações da rota para não
           // enviar dados sensíveis ou mascarar algum dado como CPF, etc
-          console.log('Route:', context.data?.route || {});
+          console.log('Route:', util.sanitize(context.data?.route || {}));
           return context;
         },
       }),

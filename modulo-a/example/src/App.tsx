@@ -1,10 +1,8 @@
 import * as React from 'react';
-import ModuloA from 'react-native-modulo-a';
-import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
-
-import pkg from '../../package.json';
-
+import { NavigationContainer } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
+import ModuloA from 'react-native-modulo-a';
+import pkg from '../../package.json';
 
 export const initSentry = () => {
   Sentry.init({
@@ -22,14 +20,10 @@ export const initSentry = () => {
 
 initSentry();
 
-const App = () => {
-  return (
-    <SafeAreaView>
-      <View style={{ height: 100 }}>
-        <ModuloA />
-      </View>
-    </SafeAreaView>
-  );
-};
+const App = () => (
+  <NavigationContainer>
+    <ModuloA />
+  </NavigationContainer>
+);
 
 export default App;

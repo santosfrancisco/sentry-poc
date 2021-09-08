@@ -3,11 +3,7 @@ import {Button, StyleSheet, Text, View} from 'react-native';
 import ModuloA from 'react-native-modulo-a';
 
 const ModA = () => {
-  return (
-    <View style={{height: 100}}>
-      <ModuloA />
-    </View>
-  );
+  return <ModuloA />;
 };
 
 const styles = StyleSheet.create({
